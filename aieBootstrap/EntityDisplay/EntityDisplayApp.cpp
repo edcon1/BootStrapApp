@@ -1,39 +1,38 @@
-#include "AsteroidsApp.h"
+#include "EntityDisplayApp.h"
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
-#include <iostream>
 
-AsteroidsApp::AsteroidsApp() {
-
-}
-
-AsteroidsApp::~AsteroidsApp() {
+EntityDisplayApp::EntityDisplayApp() 
+{
 
 }
 
-bool AsteroidsApp::startup() {
+EntityDisplayApp::~EntityDisplayApp() 
+{
+
+}
+
+bool EntityDisplayApp::startup()
+{
 	
 	m_2dRenderer = new aie::Renderer2D();
+	m_font = new aie::Font("./font/consolas.ttf", 32);
 
-	// TODO: remember to change this when redistributing a build!
-	// the following path would be used instead: "./font/consolas.ttf"
-	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
+	setBackgroundColour(1, 1, 1);
 
-	m_ship = new aie::Texture("../bin/textures/ship.png");
-	m_asteroid = new aie::Texture("../bin/textures/rock_medium.png");
-
-	
 	return true;
 }
 
-void AsteroidsApp::shutdown() {
+void EntityDisplayApp::shutdown()
+{
 
 	delete m_font;
 	delete m_2dRenderer;
 }
 
-void AsteroidsApp::update(float deltaTime) {
+void EntityDisplayApp::update(float deltaTime)
+{
 
 	// input example
 	aie::Input* input = aie::Input::getInstance();
@@ -43,7 +42,8 @@ void AsteroidsApp::update(float deltaTime) {
 		quit();
 }
 
-void AsteroidsApp::draw() {
+void EntityDisplayApp::draw() 
+{
 
 	// wipe the screen to the background colour
 	clearScreen();
@@ -51,12 +51,11 @@ void AsteroidsApp::draw() {
 	// begin drawing sprites
 	m_2dRenderer->begin();
 
-	
-
-
-	
-
-	// draw your stuff here!
+	// draw entities
+	for (auto& entity : m_entities) {
+		m_2dRenderer->setRenderColour(entity.r, entity.g, entity.b);
+		m_2dRenderer->drawBox(entity.x, entity.y, entity.size, entity.size, entity.rotation);
+	}
 	
 	// output some text, uses the last used colour
 	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
