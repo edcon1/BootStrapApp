@@ -4,11 +4,12 @@
 #include "Input.h"
 #include <random>
 #include <ctime>
+#include <iostream>
 
 
 mini_meApp::mini_meApp()
 {
-
+	srand((unsigned int)time(nullptr));
 }
 
 mini_meApp::~mini_meApp() 
@@ -18,14 +19,13 @@ mini_meApp::~mini_meApp()
 
 bool mini_meApp::startup()
 {
-	srand((unsigned int)time(nullptr));
 
 	m_2dRenderer = new aie::Renderer2D();
 
 	manPosX = getWindowWidth() * 0.5f;
 	manPosY = getWindowHeight() * 0.5f;
-	coinPosX = getWindowWidth() * 0.5f;
-	coinPosY = getWindowHeight() * 0.5f;
+	coinPosX = getWindowWidth() * 0.2f;
+	coinPosY = getWindowHeight() * 0.2f;
 
 	// TODO: remember to change this when redistributing a build!
 	// the following path would be used instead: "./font/consolas.ttf"
@@ -75,6 +75,35 @@ void mini_meApp::update(float deltaTime)
 		manPosX += 0.3f;
 	}
 
+	
+	
+	randomValueY = rand() % getWindowHeight();
+	randomValueX = rand() % getWindowWidth();
+
+	
+	
+		float coinTopRX = coinPosX + 25;
+		float coinTopRY = coinPosY + 25;
+		float coinBottomLX = coinPosX - 25;
+		float coinBottomLY = coinPosY - 25;
+
+		float manTopRX = manPosX + 25;
+		float manTopRY = manPosY + 25;
+		float manBottomLX = manPosX - 25;
+		float manBottomLY = manPosY - 25;
+
+		if (coinTopRX > manBottomLX && coinTopRY > manBottomLY &&
+			coinBottomLX < manTopRX && coinBottomLY < manTopRY)
+		{
+			coinPosX = randomValueX;
+			coinPosY = randomValueY;
+			coinCounter++;
+			std::cout << coinCounter << std::endl;
+		}
+
+
+
+
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
@@ -94,18 +123,16 @@ void mini_meApp::draw()
 	
 	// output some text, uses the last used colour
 	m_2dRenderer->drawSprite(m_walkingMan, manPosX, manPosY, 50, 50);
-	m_2dRenderer->drawSprite(m_coin->coinTex, coinPosX * 0.5f, coinPosY * 0.5f, 50, 50);
+	m_2dRenderer->drawSprite(m_coin->coinTex, coinPosX, coinPosY, 50, 50);
 	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
-
-	
 	
 
+	ImGui::Begin("Test", false);
+	ImGui::Text("Coin Collected: (%i)", coinCounter);
 
-	// done drawing sprites
-	if (manPosX == coinPosX && manPosY == coinPosY)
-	{
-		
-	}
+	ImGui::End();
+
 
 	m_2dRenderer->end();
+
 }

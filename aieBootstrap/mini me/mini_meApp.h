@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "Renderer2D.h"
+#include <imgui.h>
 
 class mini_meApp : public aie::Application {
 public:
@@ -37,7 +38,9 @@ protected:
 	float coinPosX;
 	float coinPosY;
 	int coinCounter = 0;
-	int randomValue = 0;
+	int randomValueX = 0;
+	int randomValueY = 0;
+	void randomCoin();
 
 	coin* m_coin;
 };
